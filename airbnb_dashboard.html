@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airbnb Listings — Analysis Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#101E27;
+    --panel:#17293380;
+    --border:#28404C;
+    --ink:#EDE7D8;
+    --ink-dim:#93A6B0;
+    --amber:#D6913E;
+    --teal:#4F9187;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;padding:48px 32px 64px;}
+  .wrap{max-width:1100px;margin:0 auto;}
+  header{border-bottom:1px solid var(--border);padding-bottom:28px;margin-bottom:36px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:32px;margin:0 0 8px;letter-spacing:-0.01em;}
+  header p{margin:0;color:var(--ink-dim);font-size:14px;max-width:520px;line-height:1.6;}
+  .src-tag{font-size:12px;color:var(--ink-dim);border:1px solid var(--border);padding:6px 12px;border-radius:20px;white-space:nowrap;}
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px;}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:20px;}
+  .kpi .label{font-size:12px;color:var(--ink-dim);margin-bottom:10px;}
+  .kpi .value{font-family:'Fraunces',serif;font-size:30px;font-weight:500;color:var(--amber);}
+  .kpi .value.teal{color:var(--teal);}
+  .grid{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;margin-bottom:20px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:24px;}
+  .card h2{font-family:'Fraunces',serif;font-weight:500;font-size:17px;margin:0 0 4px;}
+  .card .sub{font-size:13px;color:var(--ink-dim);margin:0 0 18px;}
+  .toggle-row{display:flex;gap:8px;margin-bottom:16px;}
+  .toggle-row button{background:transparent;border:1px solid var(--border);color:var(--ink-dim);font-family:'Inter',sans-serif;font-size:12px;padding:6px 14px;border-radius:20px;cursor:pointer;}
+  .toggle-row button.active{border-color:var(--amber);color:var(--amber);}
+  .chart-box{position:relative;height:260px;}
+  .country-list{list-style:none;margin:0;padding:0;}
+  .country-list li{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;}
+  .country-list li:last-child{border-bottom:none;}
+  .country-list .name{flex:0 0 90px;color:var(--ink);}
+  .country-list .bar-track{flex:1;height:8px;background:#0D1920;border-radius:4px;overflow:hidden;}
+  .country-list .bar-fill{height:100%;background:var(--amber);border-radius:4px;}
+  .country-list .count{flex:0 0 50px;text-align:right;color:var(--ink-dim);font-variant-numeric:tabular-nums;}
+  .note{font-size:12px;color:var(--ink-dim);margin-top:14px;}
+  .pair-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .stat-mini .value{font-family:'Fraunces',serif;font-size:22px;color:var(--teal);}
+  .amenity-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;}
+  .amenity-grid .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
+  .amenity-grid .row span:last-child{color:var(--ink-dim);font-variant-numeric:tabular-nums;}
+  .rules-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .rules-table th{text-align:right;font-weight:500;color:var(--ink-dim);padding:6px 8px;font-size:11px;}
+  .rules-table th:first-child, .rules-table td:first-child{text-align:left;}
+  .rules-table td{text-align:right;padding:7px 8px;border-top:1px solid var(--border);}
+  @media (max-width:800px){
+    .kpi-row{grid-template-columns:repeat(2,1fr);}
+    .grid, .pair-row, .amenity-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Airbnb listings — analysis dashboard</h1>
+      <p>Country distribution, pricing, amenities, and rating patterns from the cleaned listings dataset.</p>
+    </div>
+    <div class="src-tag">Verified against raw dataset · Sept 2026</div>
+  </header>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">Raw listings collected</div>
+      <div class="value">14,456</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Clean listings analyzed</div>
+      <div class="value teal">10,913</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Unrated ("New") listings</div>
+      <div class="value">17.4%</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Price ↔ guest correlation</div>
+      <div class="value teal">0.35</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Average price by guest capacity</h2>
+      <p class="sub">₹ average nightly price, grouped by how many guests a listing accommodates</p>
+      <div class="toggle-row">
+        <button id="btn-line" class="active">Line</button>
+        <button id="btn-bar">Bar</button>
+      </div>
+      <div class="chart-box">
+        <canvas id="priceChart" role="img" aria-label="Line chart showing average nightly price rising from about 4,280 rupees for 1-guest listings to about 46,990 rupees for 16-guest listings"></canvas>
+      </div>
+      <p class="note">Price rises roughly 11x from 1-guest to 16-guest listings, with a fairly steady upward trend across guest counts.</p>
+    </div>
+
+    <div class="card">
+      <h2>Top countries by listings</h2>
+      <p class="sub">Of the cleaned, deduplicated dataset</p>
+      <ul class="country-list" id="countryList"></ul>
+      <p class="note">India accounts for ~19% of all cleaned listings.</p>
+    </div>
+  </div>
+
+  <div class="pair-row" style="margin-bottom:20px;">
+    <div class="card">
+      <h2>Rated vs. unrated listings</h2>
+      <p class="sub">Share of listings with at least one rating</p>
+      <div class="chart-box" style="height:200px;">
+        <canvas id="ratingChart" role="img" aria-label="Donut chart: 9,015 listings are rated, 1,898 are still marked New with no rating"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Typical booking policy</h2>
+      <p class="sub">Most common check-in / check-out times across all listings</p>
+      <div class="pair-row" style="margin-top:8px;">
+        <div class="stat-mini">
+          <div class="label" style="font-size:12px;color:var(--ink-dim);margin-bottom:6px;">Check-in</div>
+          <div class="value">After 3:00 pm</div>
+        </div>
+        <div class="stat-mini">
+          <div class="label" style="font-size:12px;color:var(--ink-dim);margin-bottom:6px;">Check-out</div>
+          <div class="value">11:00 am</div>
+        </div>
+      </div>
+      <p class="note">The standard hotel-style turnover window, and the most common policy hosts set regardless of country.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Top 10 amenities offered</h2>
+      <p class="sub">Listings offering each amenity, excluding "Unavailable" entries</p>
+      <div class="amenity-grid" id="amenityGrid"></div>
+    </div>
+
+    <div class="card">
+      <h2>House rules by country</h2>
+      <p class="sub">% of listings enforcing each rule, top 8 countries by volume</p>
+      <div style="overflow-x:auto;">
+        <table class="rules-table">
+          <thead><tr><th>Country</th><th>No smoking</th><th>No parties</th><th>No pets</th></tr></thead>
+          <tbody id="rulesBody"></tbody>
+        </table>
+      </div>
+      <p class="note">Japan and France enforce all three rules most strictly; India is the most permissive of the top 8.</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  const guestLabels = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+  const guestPrices = [4281.48,7855.98,7153.97,10319.86,12525.71,16438.08,15045.82,24892.21,20325.73,29348.31,31692.69,34630.29,30139.68,48293.37,27907.26,46989.00];
+
+  const countries = [
+    {name:'India', count:2096},
+    {name:'Italy', count:983},
+    {name:'Greece', count:866},
+    {name:'Thailand', count:540},
+    {name:'France', count:451}
+  ];
+  const maxCount = countries[0].count;
+  const list = document.getElementById('countryList');
+  countries.forEach(c=>{
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="name">${c.name}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${(c.count/maxCount*100).toFixed(0)}%"></span></span>
+      <span class="count">${c.count.toLocaleString()}</span>`;
+    list.appendChild(li);
+  });
+
+  const amenities = [
+    {name:'Wifi', count:8022}, {name:'Kitchen', count:8004},
+    {name:'Free parking on premises', count:7744}, {name:'Pets allowed', count:3764},
+    {name:'TV', count:3425}, {name:'Dedicated workspace', count:3404},
+    {name:'Air conditioning', count:3395}, {name:'Washing machine', count:3057},
+    {name:'Hair dryer', count:2083}, {name:'Long-term stays allowed', count:2044}
+  ];
+  const amenityGrid = document.getElementById('amenityGrid');
+  amenities.forEach(a=>{
+    const div = document.createElement('div');
+    div.className = 'row';
+    div.innerHTML = `<span>${a.name}</span><span>${a.count.toLocaleString()}</span>`;
+    amenityGrid.appendChild(div);
+  });
+
+  const rules = [
+    {country:'India', no_smoking:24.9, no_parties:43.9, no_pets:47.6},
+    {country:'Italy', no_smoking:61.3, no_parties:70.4, no_pets:46.5},
+    {country:'Greece', no_smoking:72.7, no_parties:74.0, no_pets:65.5},
+    {country:'Thailand', no_smoking:56.7, no_parties:53.7, no_pets:68.9},
+    {country:'France', no_smoking:82.7, no_parties:72.5, no_pets:59.9},
+    {country:'Japan', no_smoking:88.3, no_parties:74.8, no_pets:82.6},
+    {country:'Morocco', no_smoking:34.3, no_parties:35.3, no_pets:45.3},
+    {country:'Georgia', no_smoking:78.0, no_parties:62.4, no_pets:63.6}
+  ];
+  const rulesBody = document.getElementById('rulesBody');
+  rules.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.country}</td><td>${r.no_smoking}%</td><td>${r.no_parties}%</td><td>${r.no_pets}%</td>`;
+    rulesBody.appendChild(tr);
+  });
+
+  const ctx = document.getElementById('priceChart');
+  let currentType = 'line';
+  const priceChart = new Chart(ctx, {
+    type: currentType,
+    data: {
+      labels: guestLabels,
+      datasets: [{
+        label: 'Avg price (₹)',
+        data: guestPrices,
+        borderColor: '#D6913E',
+        backgroundColor: 'rgba(214,145,62,0.15)',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: '#D6913E',
+        tension: 0.25,
+        fill: currentType === 'line'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (item) => '₹' + Math.round(item.parsed.y).toLocaleString() } }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Guests', color:'#93A6B0' }, ticks:{color:'#93A6B0'}, grid:{color:'#28404C'} },
+        y: {
+          title: { display: true, text: 'Avg price (₹)', color:'#93A6B0' },
+          ticks: { color:'#93A6B0', callback: (v) => '₹' + (v/1000) + 'k' },
+          grid:{color:'#28404C'}
+        }
+      }
+    }
+  });
+
+  document.getElementById('btn-line').addEventListener('click', () => setType('line'));
+  document.getElementById('btn-bar').addEventListener('click', () => setType('bar'));
+  function setType(type){
+    if(type === currentType) return;
+    currentType = type;
+    document.getElementById('btn-line').classList.toggle('active', type==='line');
+    document.getElementById('btn-bar').classList.toggle('active', type==='bar');
+    priceChart.config.type = type;
+    priceChart.data.datasets[0].fill = type === 'line';
+    priceChart.data.datasets[0].backgroundColor = type === 'bar' ? '#D6913E' : 'rgba(214,145,62,0.15)';
+    priceChart.update();
+  }
+
+  new Chart(document.getElementById('ratingChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Rated', 'Unrated (New)'],
+      datasets: [{ data: [9015, 1898], backgroundColor: ['#4F9187', '#28404C'], borderColor: '#17293380', borderWidth: 2 }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#EDE7D8', font: { size: 12 }, padding: 16 } },
+        tooltip: { callbacks: { label: (item) => item.label + ': ' + item.parsed.toLocaleString() } }
+      }
+    }
+  });
+</script>
+</body>
+</html>
