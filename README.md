@@ -4,10 +4,12 @@
 ![Pandas](https://img.shields.io/badge/Pandas-Data%20Cleaning-150458?logo=pandas&logoColor=white)
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-11557C)
 ![Chart.js](https://img.shields.io/badge/Chart.js-Interactive%20Dashboard-FF6384?logo=chart.js&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?logo=powerbi&logoColor=black)
 ![Colab](https://img.shields.io/badge/Google%20Colab-Environment-F9AB00?logo=googlecolab&logoColor=white)
 
 An end-to-end data analysis project on a real-world, messy Airbnb listings dataset — cleaned
-and explored in Python, then visualized in a standalone interactive HTML dashboard.
+and explored in Python, then visualized in two dashboards: a standalone interactive HTML
+dashboard and a Power BI dashboard.
 
 ## 📑 Table of Contents
 - [Tech Stack & Tools](#️-tech-stack--tools)
@@ -15,6 +17,7 @@ and explored in Python, then visualized in a standalone interactive HTML dashboa
 - [Core Workflow](#-core-workflow)
 - [Key Insights](#-key-insights)
 - [Interactive Dashboard](#-interactive-dashboard)
+- [Power BI Dashboard](#-power-bi-dashboard)
 - [Repository Structure](#-repository-structure)
 - [How to Run](#-how-to-run-the-notebook)
 
@@ -22,7 +25,7 @@ and explored in Python, then visualized in a standalone interactive HTML dashboa
 - **Environment:** Google Colab
 - **Language:** Python
 - **Libraries:** Pandas, NumPy, Matplotlib, ydata-profiling
-- **Dashboard:** HTML/CSS/JS (Chart.js)
+- **Dashboards:** HTML/CSS/JS (Chart.js) · Power BI
 
 ## 📊 Dataset
 14,456 scraped Airbnb listings, 13 raw columns — name, rating, reviews, host info, address,
@@ -80,6 +83,16 @@ line/bar-toggle pricing chart, top countries, top amenities, and a house-rules-b
 table. It's also included as a standalone file (`airbnb_dashboard.html`) you can open
 directly in any browser, or host via GitHub Pages for a shareable link.
 
+## 📊 Power BI Dashboard
+
+A second dashboard built in Power BI Desktop — 3 pages covering an overview (KPI cards,
+top countries, rated vs. unrated split), pricing (price vs. guest capacity, top countries
+by price), and amenities & house rules (top 10 amenities, a house-rules-by-country matrix).
+
+Exported as a PDF — [`airbnb_powerbi_dashboard.pdf`](./airbnb_powerbi_dashboard.pdf) — since
+Power BI's live-publish feature requires a work/school Microsoft account. Click the file
+above to view all 3 pages directly in GitHub.
+
 ## 📁 Repository Structure
 
 ```text
@@ -87,6 +100,7 @@ DA-AIRBNB-PROJECT/
 ├── README.md
 ├── DA_AIRBNB.ipynb
 ├── airbnb_dashboard.html
+├── airbnb_powerbi_dashboard.pdf
 └── data/
     └── airbnb.csv
 ```
