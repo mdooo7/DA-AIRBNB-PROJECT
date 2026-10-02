@@ -24,7 +24,7 @@ dashboard and a Power BI dashboard.
 ## 🛠️ Tech Stack & Tools
 - **Environment:** Google Colab
 - **Language:** Python
-- **Libraries:** Pandas, NumPy, Matplotlib, ydata-profiling
+- **Libraries:** Pandas, NumPy, Matplotlib
 - **Dashboards:** HTML/CSS/JS (Chart.js) · Power BI
 
 ## 📊 Dataset
