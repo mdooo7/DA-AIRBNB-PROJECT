@@ -81,7 +81,8 @@ findings, with an interactive line/bar toggle on the pricing chart.
 The notebook's final cell renders a full interactive dashboard inline — KPI cards, a
 line/bar-toggle pricing chart, top countries, top amenities, and a house-rules-by-country
 table. It's also included as a standalone file (`airbnb_dashboard.html`) you can open
-directly in any browser, or host via GitHub Pages for a shareable link.
+directly in any browser, or view it live here:
+**[mdooo7.github.io/DA-AIRBNB-PROJECT/airbnb_dashboard.html](https://mdooo7.github.io/DA-AIRBNB-PROJECT/airbnb_dashboard.html)**
 
 ## 📊 Power BI Dashboard
 
@@ -114,5 +115,5 @@ DA-AIRBNB-PROJECT/
 3. Run all cells sequentially: **Runtime → Run all** — the last cell renders the interactive
    dashboard inline.
 
-Alternatively, open `airbnb_dashboard.html` directly in a browser, or host it via GitHub Pages
-for a shareable link.
+Alternatively, open `airbnb_dashboard.html` directly in a browser, or view the live version here:
+**[mdooo7.github.io/DA-AIRBNB-PROJECT/airbnb_dashboard.html](https://mdooo7.github.io/DA-AIRBNB-PROJECT/airbnb_dashboard.html)**
